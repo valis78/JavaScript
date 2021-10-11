@@ -1,0 +1,107 @@
+<html>
+    <head>
+        <meta charset=utf8>
+        <style>
+            table,th,td {
+                margin-left:auto;
+                margin-right:auto;
+                border-width: 1px;
+                border-style:solid;
+                background-color: lightcyan;
+                vertical-align: text-top;
+            }
+            td,th {text-align:center;padding:4px;}
+            .conge {background-color:lightgreen} 
+            .demiconge {background-color:rgb(191, 209, 191)} 
+            #today {background-color:rgb(223, 226, 43);}
+        </style>
+        <script>
+            libmois = Array('Janvier','Février','Mars',
+                            'Avril','Mai','Juin',
+                            'Juillet','Aout','Septembre',
+                            'Octobre','Novembre','Décembre');
+            function LibelleMois(m) {
+                return libmois[m];
+            }
+            function LibelleMoisAncien(m) {
+                if (m==1) return 'Janvier';
+                else if (m==2) return 'Février';
+                else if (m==3) return 'Mars';
+                else if (m==4) return 'Avril';
+                else if (m==5) return 'Mai';
+                else if (m==6) return 'Juin';
+                else if (m==7) return 'Juillet';
+                else if (m==8) return 'Aout';
+                else if (m==9) return 'Septembre';
+                else if (m==10) return 'Octobre';
+                else if (m==11) return 'Novembre';
+                else if (m==12) return 'Décembre';
+            }
+            function AfficherMois(annee,mois){
+                var d = new Date();
+                jourcourant = d.getDate();
+                moiscourant = d.getMonth();
+                ancourant = d.getFullYear();
+                d.setMonth(mois);
+                d.setFullYear(annee);
+                d.setDate(1);
+                //alert("Mois : "+d.getMonth()+ "   Annee : "+d.getFullYear() + "   Premier jour : " + d.getDay());
+                pj = d.getDay();
+                //alert(pj);
+                mc = d.getMonth();
+                st = "<table>";
+                st += '<caption>Mois : '+LibelleMois(mois) + ' ' + annee +'</caption>';
+                st += "<tr><th>Dim</th><th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th>";
+                st += "<tr>";
+                if (pj>0) {
+                    for (k=1;k<=pj;k++)
+                        st += "<td></td>";
+                }
+                for (j=1;j<=31;j++) {
+                    if (((j+pj)%7)==1)
+                        st  +="<tr>";
+                    d.setDate(j);
+                    if (mc==d.getMonth()) {
+                        if (j==jourcourant && mois==moiscourant && annee==ancourant)
+                            st += "<td id=today>"+j+"</td>";
+                        else if (d.getDay()==0)
+                            st += "<td class=conge>"+j+"</td>";
+                        else if (d.getDay()==6)
+                            st += "<td class=demiconge>"+j+"</td>";
+                        else 
+                            st += "<td>"+j+"</td>";                           
+                    }                
+                }
+                st += "</table>";
+                return st;
+            }
+
+            function Afficher() {
+                str = AfficherMois(document.f.annee.value,document.f.mois.value);
+                document.getElementById('divmois').innerHTML = str;
+            }
+
+            function ChargerListe() {
+                st='';
+                for (j=0;j<=11;j++)
+                    st += "<option value="+j+">"+LibelleMois(j)+"</option>";
+                document.getElementById('selectmois').innerHTML = st;
+
+                var demo = new Date();
+                document.f.annee.value = demo.getFullYear();
+            }
+        </script>
+    </head>
+    <body onLoad='ChargerListe()'>
+        <fieldset>
+            <form name=f>
+                Entrer l'année : <input type=number name=annee min=2000 max=2040 step=4 /><br>
+                Entrer le mois : <select name=mois id=selectmois>
+                                    </select> 
+                <br><br>
+                <input type=button value="Afficher mois" onClick="Afficher();" /> 
+            </form>
+        </fieldset>
+        <div id=divmois></div>
+    </body>
+</html>
